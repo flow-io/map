@@ -25,7 +25,7 @@
     "writable",
     "readable",
     "transform",
-    "event stream"
+    "event stream",
     "map",
     "flow",
     "flow.io"
