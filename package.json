@@ -1,0 +1,50 @@
+{
+  "name": "flow-map",
+  "version": "0.0.0",
+  "description": "Transform stream which performs a data mapping.",
+  "author": {
+    "name": "Athan Reines",
+    "email": "athan@nodeprime.com"
+  },
+  "contributors": [
+    {
+      "name": "Athan Reines",
+      "email": "athan@nodeprime.com"
+    }
+  ],
+  "scripts": {
+    "test": "mocha"
+  },
+  "main": "./lib",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/kgryte/flow-map.git"
+  },
+  "keywords": [
+    "stream",
+    "writable",
+    "readable",
+    "transform",
+    "event stream"
+    "map",
+    "flow",
+    "flow.io"
+  ],
+  "bugs": {
+    "url": "https://github.com/kgryte/flow-map/issues"
+  },
+  "dependencies": {
+    "event-stream": "~3.1.5"
+  },
+  "devDependencies": {
+    "mocha": "1.x.x",
+    "chai": "1.x.x",
+    "stream-spec": "~0.3.5"
+  },
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "http://www.opensource.org/licenses/MIT"
+    }
+  ]
+}
