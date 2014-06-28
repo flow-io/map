@@ -27,8 +27,8 @@ for ( var i = 0; i < 1000; i++ ) {
 
 // Create a new stream (map a numeric data stream to 0s and 1s):
 stream = mStream()
-	.transform( function( data ) {
-		return Math.round( data );
+	.map( function( d ) {
+		return Math.round( d );
 	})
 	.stream();
 
