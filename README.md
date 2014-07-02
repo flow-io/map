@@ -14,34 +14,34 @@ $ npm install flow-map
 ## Examples
 
 ``` javascript
-var // Flow map stream generator:
+var eventStream = require( 'event-stream' ),
 	mStream = require( 'flow-map' );
 
-var data = new Array( 1000 ),
-	stream;
-
 // Create some data...
-for ( var i = 0; i < 1000; i++ ) {
+var data = new Array( 1000 );
+for ( var i = 0; i < data.length; i++ ) {
 	data[ i ] = Math.random();
 }
 
+// Create a readable stream:
+var readStream = eventStream.readArray( data );
+
 // Create a new stream (map a numeric data stream to 0s and 1s):
-stream = mStream()
+var stream = mStream()
 	.map( function( d ) {
 		return Math.round( d );
 	})
 	.stream();
 
-// Add a listener:
-stream.on( 'data', function( data ) {
-	console.log( data );
-});
-
-// Write the data to the stream:
-for ( var j = 0; j < data.length; j++ ) {
-	stream.write( data[ j ] );
-}
-stream.end();
+// Create a pipeline:
+readStream.pipe( stream )
+	.pipe(
+		mStream().map( function( d ) {
+			return d.toString();
+		})
+		.stream()
+	)
+	.pipe( process.stdout );
 ```
 
 ## Tests
