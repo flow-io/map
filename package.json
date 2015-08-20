@@ -1,50 +1,61 @@
 {
   "name": "flow-map",
   "version": "0.0.2",
-  "description": "Transform stream which performs a data mapping.",
+  "description": "Transform stream which maps each streamed value to another value.",
   "author": {
     "name": "Athan Reines",
-    "email": "athan@nodeprime.com"
+    "email": "kgryte@gmail.com"
   },
   "contributors": [
     {
       "name": "Athan Reines",
-      "email": "athan@nodeprime.com"
+      "email": "kgryte@gmail.com"
     }
   ],
   "scripts": {
-    "test": "mocha"
+    "test": "mocha",
+    "test-cov": "istanbul cover ./node_modules/.bin/_mocha --dir ./reports/coverage -- -R spec",
+    "codecov": "istanbul cover ./node_modules/.bin/_mocha --dir ./reports/codecov/coverage --report lcovonly -- -R spec && cat ./reports/codecov/coverage/lcov.info | codecov && rm -rf ./reports/codecov"
   },
   "main": "./lib",
+  "bin": {
+    "flow-map": "./bin/cli"
+  },
   "repository": {
     "type": "git",
-    "url": "git://github.com/flow-io/flow-map.git"
+    "url": "git://github.com/flow-io/map.git"
   },
   "keywords": [
+  	"flow.io",
+  	"flow-io",
+  	"flow",
     "stream",
+    "streams",
     "writable",
     "readable",
     "transform",
-    "event stream",
-    "map",
-    "flow",
-    "flow.io"
+   	"map",
+   	"mapping"
   ],
   "bugs": {
-    "url": "https://github.com/flow-io/flow-map/issues"
+    "url": "https://github.com/flow-io/map/issues"
   },
   "dependencies": {
-    "event-stream": "~3.1.5"
+    "minimist": "^1.1.3",
+    "pkginfo": "^0.3.0",
+    "readable-stream": "^2.0.2",
+    "utils-copy": "^1.0.0",
+    "validate.io-boolean-primitive": "^1.0.0",
+    "validate.io-nonnegative": "^1.0.0",
+    "validate.io-object": "^1.0.4"
   },
   "devDependencies": {
-    "mocha": "1.x.x",
-    "chai": "1.x.x",
-    "stream-spec": "~0.3.5"
+    "chai": "3.x.x",
+    "codecov.io": "^0.1.5",
+    "istanbul": "^0.3.0",
+    "jshint": "2.x.x",
+    "jshint-stylish": "2.x.x",
+    "mocha": "2.x.x"
   },
-  "licenses": [
-    {
-      "type": "MIT",
-      "url": "http://www.opensource.org/licenses/MIT"
-    }
-  ]
+  "license": "MIT"
 }
