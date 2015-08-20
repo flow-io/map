@@ -55,6 +55,9 @@ The function accepts the following `options`:
 * 	__encoding__: specifies how `Buffer` objects should be decoded to `strings`. Default: `null`.
 *	__decodeStrings__: `boolean` which specifies whether written `strings` should be decoded into `Buffer` objects. Default: `true`.
 *	__highWaterMark__: specifies the `Buffer` level at which `write()` calls start returning `false`. Default: `16` (16kb).
+*	__allowHalfOpen__: specifies whether the stream should remain open even if one side ends. Default: `false`.
+*	__readableObjectMode__: specifies whether the readable side should be in object mode. Default: `false`.
+*	__writableObjectMode__: specifies whether the writable side should be in object mode. Default: `false`.
 
 To set [stream](https://nodejs.org/api/stream.html) `options`,
 
@@ -63,7 +66,10 @@ var opts = {
 	'objectMode': true,
 	'encoding': 'utf8',
 	'decodeStrings': false,
-	'highWaterMark': 64	
+	'highWaterMark': 64,
+	'allowHalfOpen': true,
+	'readableObjectMode': true,
+	'writableObjectMode': false // overridden by `objectMode` option
 };
 
 var mStream = stream( map, opts );
@@ -106,7 +112,6 @@ function map( data, idx ) {
 }
 
 var mStream = stream.objectMode( map );
-
 mStream.pipe( process.stdout );
 
 mStream.write( data );
@@ -119,7 +124,27 @@ mStream.end();
 ## Examples
 
 ``` javascript
+var stream = require( 'flow-map' );
 
+function map( value, idx ) {
+	return value * idx;
+}
+
+function toString( value ) {
+	return value.toString() + '\n';
+}
+
+var mStream = stream.objectMode( map ),
+	tsStream = stream.objectMode( toString );
+
+mStream
+	.pipe( tsStream )
+	.pipe( process.stdout );
+
+for ( var i = 0; i < 1000; i++ ) {
+	mStream.write( Math.random() );
+}
+mStream.end();
 ```
 
 To run the example code from the top-level application directory,

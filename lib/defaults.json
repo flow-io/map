@@ -1,0 +1,9 @@
+{
+	"objectMode": false,
+	"decodeStrings": true,
+	"highWaterMark": 16,
+	"encoding": null,
+	"allowHalfOpen": false,
+	"readableObjectMode": false,
+	"writableObjectMode": false
+}
