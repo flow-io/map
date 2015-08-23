@@ -1,0 +1,43 @@
+{
+	"string": [
+		"encoding"
+	],
+	"boolean": [
+		"help",
+		"version",
+		"objectmode",
+		"allowhalfopen",
+		"no-decodestrings",
+		"readableobjectmode",
+		"writableobjectmode"
+	],
+	"alias": {
+		"help": [
+			"h"
+		],
+		"version": [
+			"V"
+		],
+		"highwatermark": [
+			"hwm"
+		],
+		"encoding": [
+			"enc"
+		],
+		"objectmode": [
+			"om"
+		],
+		"allowhalfopen": [
+			"aho"
+		],
+		"no-decodestrings": [
+			"nds"
+		],
+		"readableobjectmode": [
+			"rom"
+		],
+		"writableobjectmode": [
+			"wom"
+		]
+	}
+}

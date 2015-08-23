@@ -1,0 +1,18 @@
+
+Usage: flow-map [options] <module>
+
+Options:
+
+  -h,   --help                 Print this message.
+  -V,   --version              Print the package version.
+  -hwm, --highwatermark [hwm]  Specify how much data can be buffered into memory
+                               before applying back pressure. Default: 16KB.
+  -enc, --encoding [encoding]  String encoding.
+  -nds, --no-decodestrings     Prevent strings from being converted into buffers before
+                               streaming to destination. Default: false.
+  -aho, --allowhalfopen        Keep the stream open if either the readable or writable
+                               side ends. Default: false.
+  -om,  --objectmode           Write any value rather than only buffers and strings.
+                               Default: false.
+  -rom, --readableobjectmode   Read values as objects rather than buffers. Default: false.
+  -wom, --writableobjectmode   Write values as objects rather than buffers. Default: false.

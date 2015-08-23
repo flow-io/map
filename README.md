@@ -55,7 +55,7 @@ The function accepts the following `options`:
 * 	__encoding__: specifies how `Buffer` objects should be decoded to `strings`. Default: `null`.
 *	__decodeStrings__: `boolean` which specifies whether written `strings` should be decoded into `Buffer` objects. Default: `true`.
 *	__highWaterMark__: specifies the `Buffer` level at which `write()` calls start returning `false`. Default: `16` (16kb).
-*	__allowHalfOpen__: specifies whether the stream should remain open even if one side ends. Default: `false`.
+*	__allowHalfOpen__: specifies whether a [stream](https://nodejs.org/api/stream.html) should remain open even if one side ends. Default: `false`.
 *	__readableObjectMode__: specifies whether the readable side should be in object mode. Default: `false`.
 *	__writableObjectMode__: specifies whether the writable side should be in object mode. Default: `false`.
 
@@ -69,7 +69,7 @@ var opts = {
 	'highWaterMark': 64,
 	'allowHalfOpen': true,
 	'readableObjectMode': true,
-	'writableObjectMode': false // overridden by `objectMode` option
+	'writableObjectMode': false // overridden by `objectMode` option as `objectMode=true`
 };
 
 var mStream = stream( map, opts );
@@ -78,7 +78,7 @@ var mStream = stream( map, opts );
 
 #### stream.factory( options )
 
-Returns a reusable [stream](https://nodejs.org/api/stream.html) factory. The factory method ensures [streams](https://nodejs.org/api/stream.html) are configured identically by using the same set of provided `options`.
+Creates a reusable [stream](https://nodejs.org/api/stream.html) factory. The factory method ensures [streams](https://nodejs.org/api/stream.html) are configured identically by using the same set of provided `options`.
 
 ``` javascript
 var opts = {
@@ -124,7 +124,7 @@ mStream.end();
 ## Examples
 
 ``` javascript
-var stream = require( 'flow-map' );
+var createStream = require( 'flow-map' );
 
 function map( value, idx ) {
 	return value * idx;
@@ -134,8 +134,8 @@ function toString( value ) {
 	return value.toString() + '\n';
 }
 
-var mStream = stream.objectMode( map ),
-	tsStream = stream.objectMode( toString );
+var mStream = createStream( map ),
+	tsStream = createStream( toString );
 
 mStream
 	.pipe( tsStream )
@@ -169,25 +169,29 @@ $ npm install -g flow-map
 ### Usage
 
 ``` bash
-Usage: flow-map [options] <file>
+Usage: flow-map [options] <module>
 
 Options:
 
   -h,   --help                 Print this message.
   -V,   --version              Print the package version.
   -hwm, --highwatermark [hwm]  Specify how much data can be buffered into memory
-                               before applying back pressure. Default: 16kb.
-  -enc, --encoding <encoding>  Set the string encoding of chunks. Default: null.
-  -nds, --no-decodestrings     Prevent strings from being converted to buffers
-                               before streaming to destination. Default: false.
+                               before applying back pressure. Default: 16KB.
+  -enc, --encoding [encoding]  String encoding.
+  -nds, --no-decodestrings     Prevent strings from being converted into buffers before
+                               streaming to destination. Default: false.
+  -aho, --allowhalfopen        Keep the stream open if either the readable or writable
+                               side ends. Default: false.
   -om,  --objectmode           Write any value rather than only buffers and strings.
                                Default: false.
+  -rom, --readableobjectmode   Read values as objects rather than buffers. Default: false.
+  -wom, --writableobjectmode   Write values as objects rather than buffers. Default: false.
 ```
 
 The `flow-map` command is available as a [standard stream](http://en.wikipedia.org/wiki/Pipeline_%28Unix%29).
 
 ``` bash
-$ <stdout> | flow-map <file> | stdin
+$ <stdout> | flow-map <module> | <stdin>
 ``` 
 
 

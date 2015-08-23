@@ -1,6 +1,6 @@
 'use strict';
 
-var stream = require( './../lib' );
+var createStream = require( './../lib' );
 
 function map( value, idx ) {
 	return value * idx;
@@ -10,8 +10,8 @@ function toString( value ) {
 	return value.toString() + '\n';
 }
 
-var mStream = stream.objectMode( map ),
-	tsStream = stream.objectMode( toString );
+var mStream = createStream( map ),
+	tsStream = createStream( toString );
 
 mStream
 	.pipe( tsStream )

@@ -1,0 +1,140 @@
+#!/usr/bin/env node
+'use strict';
+
+// MODULES //
+
+var fs = require( 'fs' ),
+	path = require( 'path' ),
+	pkginfo = require( 'pkginfo' ),
+	parseArgs = require( 'minimist' ),
+	opts = require( './opts.json' ),
+	Stream = require( './../lib' );
+
+
+// VARIABLES //
+
+var tStream,
+	args,
+	pkg,
+	fcn;
+
+
+// FUNCTIONS //
+
+/**
+* FUNCTION: onClose()
+*	Callback invoked upon writing a file to `stdout`.
+*
+* @private
+*/
+function onClose() {
+	process.exit( 1 );
+}
+
+/**
+* FUNCTION: onError( evt )
+*	Event listener invoked when a stream instance emits an `error`.
+*
+* @private
+* @param {Object} evt - error event object
+*/
+function onError( evt ) {
+	console.error( evt );
+}
+
+
+// INIT //
+
+process.stdout.on( 'error', process.exit );
+
+
+// PACKAGE INFO //
+
+pkg = pkginfo.read( require.main );
+process.title = pkg.package.name;
+
+
+// ARGUMENTS //
+
+args = parseArgs( process.argv.slice( 2 ), opts );
+
+
+// HELP //
+
+if ( args.help ) {
+	fs.createReadStream( path.join( __dirname, 'usage.txt' ) )
+		.pipe( process.stdout )
+		.on( 'close', onClose );
+    return;
+}
+
+
+// VERSION //
+
+if ( args.version ) {
+	console.log( require( './../package.json' ).version );
+	return;
+}
+
+
+// OPTIONS //
+
+opts = {};
+
+// highWaterMark: (default: 16KB)
+if ( args.hasOwnProperty( 'highwatermark' ) ) {
+	opts.highWaterMark = args.highwatermark;
+}
+
+// encoding:
+if ( args.encoding ) {
+	opts.encoding = args.encoding;
+}
+
+// decodeStrings: (default: true)
+if ( args[ 'no-decodestrings' ] ) {
+	opts.decodeStrings = false;
+}
+
+// allowHalfOpen: (default: false)
+if ( args.allowhalfopen ) {
+	opts.allowHalfOpen = true;
+}
+
+// objectMode: (default: false)
+if ( args.objectmode ) {
+	opts.objectMode = true;
+}
+
+// readableObjectMode: (default: false)
+if ( args.readableObjectMode ) {
+	opts.readableObjectMode = true;
+}
+
+// writableObjectMode: (default: false)
+if ( args.writableObjectMode ) {
+	opts.writableObjectMode = true;
+}
+
+
+// FUNCTION //
+
+fcn = args._[ 0 ];
+if ( !fcn ) {
+	throw new Error( 'insufficient input arguments. Must provide a file which exports a map function.' );
+}
+fcn = path.resolve( __dirname, '..', fcn );
+fcn = require( fcn );
+
+
+// STREAM //
+
+tStream = new Stream( opts, fcn );
+
+// Add event listeners:
+tStream.on( 'error', onError );
+
+// Create the pipeline:
+process.stdin
+	.pipe( tStream )
+	.pipe( process.stdout );
