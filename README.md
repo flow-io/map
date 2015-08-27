@@ -27,6 +27,7 @@ Creates a [transform stream](https://nodejs.org/api/stream.html) which maps each
 ``` javascript
 var mStream = stream( map );
 
+// Note: the index is zero-based...
 function map( value, idx ) {
 	value = parseFloat( value );
 	return (value * idx).toString();
@@ -43,7 +44,7 @@ mStream.write( '4' );
 // => 4
 
 mStream.write( '10' );
-// => 30
+// => 20
 
 // End the stream:
 mStream.end();
@@ -51,29 +52,21 @@ mStream.end();
 
 The function accepts the following `options`:
 
-*	__objectMode__: `boolean` which specifies whether a [stream](https://nodejs.org/api/stream.html) should operate in object mode. Default: `false`.
-* 	__encoding__: specifies how `Buffer` objects should be decoded to `strings`. Default: `null`.
-*	__decodeStrings__: `boolean` which specifies whether written `strings` should be decoded into `Buffer` objects. Default: `true`.
 *	__highWaterMark__: specifies the `Buffer` level at which `write()` calls start returning `false`. Default: `16` (16kb).
 *	__allowHalfOpen__: specifies whether a [stream](https://nodejs.org/api/stream.html) should remain open even if one side ends. Default: `false`.
-*	__readableObjectMode__: specifies whether the readable side should be in object mode. Default: `false`.
-*	__writableObjectMode__: specifies whether the writable side should be in object mode. Default: `false`.
 
 To set [stream](https://nodejs.org/api/stream.html) `options`,
 
 ``` javascript
 var opts = {
-	'objectMode': true,
-	'encoding': 'utf8',
-	'decodeStrings': false,
 	'highWaterMark': 64,
-	'allowHalfOpen': true,
-	'readableObjectMode': true,
-	'writableObjectMode': false // overridden by `objectMode` option as `objectMode=true`
+	'allowHalfOpen': true
 };
 
 var mStream = stream( map, opts );
 ```
+
+__Note__: this [stream](https://nodejs.org/api/stream.html) __always__ operates in `objectMode`.
 
 
 #### stream.factory( options )
@@ -82,9 +75,6 @@ Creates a reusable [stream](https://nodejs.org/api/stream.html) factory. The fac
 
 ``` javascript
 var opts = {
-	'objectMode': true,
-	'encoding': 'utf8',
-	'decodeStrings': false,
 	'highWaterMark': 64	
 };
 
@@ -119,6 +109,8 @@ mStream.write( data );
 
 mStream.end();
 ```
+
+__Note__: this method behaves the same as the main method and is provided to maintain API consistency with other [`flow`](http://flow-io.com) modules. 
 
 
 ## Examples
@@ -175,17 +167,12 @@ Options:
 
   -h,   --help                 Print this message.
   -V,   --version              Print the package version.
+        --split [sep]          Separator used to split incoming data. Default: '/\\r?\\n/'.
+        --join [sep]           Separator used to join outgoing data. Default: '\n'.
   -hwm, --highwatermark [hwm]  Specify how much data can be buffered into memory
                                before applying back pressure. Default: 16KB.
-  -enc, --encoding [encoding]  String encoding.
-  -nds, --no-decodestrings     Prevent strings from being converted into buffers before
-                               streaming to destination. Default: false.
   -aho, --allowhalfopen        Keep the stream open if either the readable or writable
                                side ends. Default: false.
-  -om,  --objectmode           Write any value rather than only buffers and strings.
-                               Default: false.
-  -rom, --readableobjectmode   Read values as objects rather than buffers. Default: false.
-  -wom, --writableobjectmode   Write values as objects rather than buffers. Default: false.
 ```
 
 The `flow-map` command is available as a [standard stream](http://en.wikipedia.org/wiki/Pipeline_%28Unix%29).
@@ -195,24 +182,40 @@ $ <stdout> | flow-map <module> | <stdin>
 ``` 
 
 
+### Notes
+
+*	If the split separator is a [regular expression](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions), ensure that the `split` option is properly __escaped__.
+
+	``` bash
+	# Not escaped...
+	$ <stdout> | flow-map <module> --split '/\r?\n/'
+	
+	# Escaped...
+	$ <stdout> | flow-map <module> --split '/\\r?\\n/'
+	```
+
+
 ### Examples
 
 ``` bash
-$
+$ echo -n $'1\n2\n3\n4\n' | flow-map ./examples/script.js
+# => 0
+# => 2
+# => 6
+# => 12
 ```
 
 For local installations, modify the above command to point to the local installation directory; e.g., 
 
 ``` bash
-$ 
+$ echo -n $'1\n2\n3\n4\n' | ./node_modules/.bin/flow-map ./examples/script.js
 ```
 
 Or, if you have cloned this repository and run `npm install`, modify the command to point to the executable; e.g., 
 
 ``` bash
-$ 
+$ echo -n $'1\n2\n3\n4\n' | node ./bin/cli ./examples/script.js
 ```
-
 
 
 ---

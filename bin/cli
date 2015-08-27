@@ -7,13 +7,20 @@ var fs = require( 'fs' ),
 	path = require( 'path' ),
 	pkginfo = require( 'pkginfo' ),
 	parseArgs = require( 'minimist' ),
+	splitStream = require( 'flow-split' ),
+	joinStream = require( 'flow-join' ),
+	regex = require( 'utils-regex-from-string' ),
 	opts = require( './opts.json' ),
-	Stream = require( './../lib' );
+	mapStream = require( './../lib' );
 
 
 // VARIABLES //
 
-var tStream,
+var sStream,
+	mStream,
+	jStream,
+	ssep,
+	jsep,
 	args,
 	pkg,
 	fcn;
@@ -81,39 +88,31 @@ if ( args.version ) {
 
 opts = {};
 
+// Split separator:
+if ( args.split ) {
+	ssep = regex( args.split );
+	if ( ssep === null ) {
+		ssep = args.split;
+	}
+} else {
+	ssep = /\r?\n/;
+}
+
+// Join separator:
+if ( args.join ) {
+	jsep = args.join;
+} else {
+	jsep = '\n';
+}
+
 // highWaterMark: (default: 16KB)
 if ( args.hasOwnProperty( 'highwatermark' ) ) {
 	opts.highWaterMark = args.highwatermark;
 }
 
-// encoding:
-if ( args.encoding ) {
-	opts.encoding = args.encoding;
-}
-
-// decodeStrings: (default: true)
-if ( args[ 'no-decodestrings' ] ) {
-	opts.decodeStrings = false;
-}
-
 // allowHalfOpen: (default: false)
 if ( args.allowhalfopen ) {
 	opts.allowHalfOpen = true;
-}
-
-// objectMode: (default: false)
-if ( args.objectmode ) {
-	opts.objectMode = true;
-}
-
-// readableObjectMode: (default: false)
-if ( args.readableObjectMode ) {
-	opts.readableObjectMode = true;
-}
-
-// writableObjectMode: (default: false)
-if ( args.writableObjectMode ) {
-	opts.writableObjectMode = true;
 }
 
 
@@ -129,12 +128,27 @@ fcn = require( fcn );
 
 // STREAM //
 
-tStream = new Stream( opts, fcn );
+// Create a new split stream:
+sStream = splitStream({
+	'sep': ssep
+});
+
+// Create a new map stream:
+mStream = mapStream( opts, fcn );
+
+// Create a new join stream:
+jStream = joinStream({
+	'sep': jsep
+});
 
 // Add event listeners:
-tStream.on( 'error', onError );
+sStream.on( 'error', onError );
+mStream.on( 'error', onError );
+jStream.on( 'error', onError );
 
 // Create the pipeline:
 process.stdin
-	.pipe( tStream )
+	.pipe( sStream )
+	.pipe( mStream )
+	.pipe( jStream )
 	.pipe( process.stdout );

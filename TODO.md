@@ -1,8 +1,5 @@
 TODO
 ====
 
-1. 
-2. update cli in README
-3. tests
-4. example using a provided file
-5. 
+1. In examples, use `flow-tostring` stream
+2. 

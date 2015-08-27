@@ -1,15 +1,13 @@
 {
 	"string": [
-		"encoding"
+		"highwatermark",
+		"split",
+		"join"
 	],
 	"boolean": [
 		"help",
 		"version",
-		"objectmode",
-		"allowhalfopen",
-		"no-decodestrings",
-		"readableobjectmode",
-		"writableobjectmode"
+		"allowhalfopen"
 	],
 	"alias": {
 		"help": [
@@ -21,23 +19,8 @@
 		"highwatermark": [
 			"hwm"
 		],
-		"encoding": [
-			"enc"
-		],
-		"objectmode": [
-			"om"
-		],
 		"allowhalfopen": [
 			"aho"
-		],
-		"no-decodestrings": [
-			"nds"
-		],
-		"readableobjectmode": [
-			"rom"
-		],
-		"writableobjectmode": [
-			"wom"
 		]
 	}
 }
