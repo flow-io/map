@@ -66,7 +66,7 @@ var opts = {
 var mStream = stream( map, opts );
 ```
 
-__Note__: this [stream](https://nodejs.org/api/stream.html) __always__ operates in `objectMode`.
+__Note__: the returned [stream](https://nodejs.org/api/stream.html) __always__ operates in `objectMode`.
 
 
 #### stream.factory( options )
