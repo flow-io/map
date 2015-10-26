@@ -52,7 +52,7 @@ mStream.end();
 
 The function accepts the following `options`:
 
-*	__highWaterMark__: specifies the `Buffer` level at which `write()` calls start returning `false`. Default: `16` (16kb).
+*	__highWaterMark__: specifies the `Buffer` level at which `write()` calls start returning `false`. Default: `16` (i.e., 16 queued items).
 *	__allowHalfOpen__: specifies whether a [stream](https://nodejs.org/api/stream.html) should remain open even if one side ends. Default: `false`.
 
 To set [stream](https://nodejs.org/api/stream.html) `options`,
@@ -142,7 +142,7 @@ mStream.end();
 To run the example code from the top-level application directory,
 
 ``` bash
-$ node ./examples/index.js
+$ DEBUG=* node ./examples/index.js
 ```
 
 ---
@@ -161,16 +161,16 @@ $ npm install -g flow-map
 ### Usage
 
 ``` bash
-Usage: flow-map [options] <module>
+Usage: flow-map [options] module
 
 Options:
 
   -h,   --help                 Print this message.
   -V,   --version              Print the package version.
-        --split [sep]          Separator used to split incoming data. Default: '/\\r?\\n/'.
-        --join [sep]           Separator used to join outgoing data. Default: '\n'.
-  -hwm, --highwatermark [hwm]  Specify how much data can be buffered into memory
-                               before applying back pressure. Default: 16KB.
+        --split sep            Separator used to split incoming data. Default: '/\\r?\\n/'.
+        --join sep             Separator used to join outgoing data. Default: '\n'.
+  -hwm, --highwatermark hwm    Specify how much data can be buffered into memory
+                               before applying back pressure. Default: 16.
   -aho, --allowhalfopen        Keep the stream open if either the readable or writable
                                side ends. Default: false.
 ```

@@ -5,6 +5,7 @@
 
 var fs = require( 'fs' ),
 	path = require( 'path' ),
+	cwd = require( 'utils-cwd' ),
 	pkginfo = require( 'pkginfo' ),
 	parseArgs = require( 'minimist' ),
 	splitStream = require( 'flow-split' ),
@@ -35,7 +36,7 @@ var sStream,
 * @private
 */
 function onClose() {
-	process.exit( 1 );
+	process.exit( 0 );
 }
 
 /**
@@ -79,7 +80,7 @@ if ( args.help ) {
 // VERSION //
 
 if ( args.version ) {
-	console.log( require( './../package.json' ).version );
+	console.log( pkg.package.version );
 	return;
 }
 
@@ -105,12 +106,12 @@ if ( args.join ) {
 	jsep = '\n';
 }
 
-// highWaterMark: (default: 16KB)
+// highWaterMark:
 if ( args.hasOwnProperty( 'highwatermark' ) ) {
 	opts.highWaterMark = args.highwatermark;
 }
 
-// allowHalfOpen: (default: false)
+// allowHalfOpen:
 if ( args.allowhalfopen ) {
 	opts.allowHalfOpen = true;
 }
@@ -122,7 +123,7 @@ fcn = args._[ 0 ];
 if ( !fcn ) {
 	throw new Error( 'insufficient input arguments. Must provide a file which exports a map function.' );
 }
-fcn = path.resolve( __dirname, '..', fcn );
+fcn = path.resolve( cwd(), fcn );
 fcn = require( fcn );
 
 

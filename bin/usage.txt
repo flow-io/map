@@ -1,14 +1,14 @@
 
-Usage: flow-map [options] <module>
+Usage: flow-map [options] module
 
 Options:
 
   -h,   --help                 Print this message.
   -V,   --version              Print the package version.
-        --split [sep]          Separator used to split incoming data. Default: '/\\r?\\n/'.
-        --join [sep]           Separator used to join outgoing data. Default: '\n'.
-  -hwm, --highwatermark [hwm]  Specify how much data can be buffered into memory
-                               before applying back pressure. Default: 16KB.
+        --split sep            Separator used to split incoming data. Default: '/\\r?\\n/'.
+        --join sep             Separator used to join outgoing data. Default: '\n'.
+  -hwm, --highwatermark hwm    Specify how much data can be buffered into memory
+                               before applying back pressure. Default: 16.
   -aho, --allowhalfopen        Keep the stream open if either the readable or writable
                                side ends. Default: false.
 
