@@ -1,6 +1,6 @@
 {
   "name": "flow-map",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Transform stream which maps each streamed value to another value.",
   "author": {
     "name": "Athan Reines",
